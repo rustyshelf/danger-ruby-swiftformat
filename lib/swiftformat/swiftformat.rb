@@ -13,7 +13,7 @@ module Danger
     def check_format(files, additional_args = "")
       cmd = [@path] + files
       cmd << additional_args.split unless additional_args.nil? || additional_args.empty?
-      cmd << %w(--dryrun --verbose)
+      cmd << %w(--lint)
       stdout, stderr, status = Cmd.run(cmd.flatten)
 
       output = stdout.empty? ? stderr : stdout
@@ -41,7 +41,7 @@ module Danger
       }
     end
 
-    ERRORS_REGEX = /rules applied:(.*)\n.*updated (.*)$/.freeze
+    ERRORS_REGEX = /(.*)warning: (.*)$/.freeze
 
     def errors(output)
       errors = []
@@ -56,7 +56,7 @@ module Danger
       errors
     end
 
-    RUNTIME_REGEX = /.*swiftformat completed.*(.+\..+)s/.freeze
+    RUNTIME_REGEX = /.*SwiftFormat completed.*(.+\..+)s/.freeze
 
     def run_time(output)
       if RUNTIME_REGEX.match(output)
